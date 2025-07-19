@@ -1,0 +1,200 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Tình Yêu</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("loveForm");
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const selectOptions = formData.getAll("option");
+
+        if (selectOptions.length === 0) {
+          Swal.fire({
+            icon: "warning",
+            title: "Ơ kìa...",
+            text: "Cục dàng chưa có chọn ó 😢",
+          });
+          return;
+        }
+        Swal.fire({
+          title: "Em chắc chưa??? 😳",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Chắc chắn rùi 🥺",
+          cancelButtonText: "Đợi đã...",
+        }).then((result) => {
+          if (!result.isConfirmed) return;
+          fetch("https://formspree.io/f/mrblbodp", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              choices: selectOptions,
+            }),
+          })
+            .then((response) => {
+              if (response.ok) {
+                Swal.fire({
+                  icon: "success",
+                  title: "Gửi thành công 😘",
+                  text: "Anh nhận nhó 💌",
+                }).then(() => {
+                  for (let i = 0; i < 60; i++) {
+                    setTimeout(createFallingImage, i * 100); // mỗi ảnh rơi cách nhau 300ms
+                  }
+                });
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Lỗi òi 😥",
+                  text: "Có gì đó sai sai, gửi không được.",
+                });
+              }
+            })
+            .catch(() => {
+              Swal.fire({
+                icon: "error",
+                title: "Hic 😓",
+                text: "Không thể kết nối tới máy chủ!",
+              });
+            });
+        });
+      });
+    });
+    const imgSource = [
+      "img/hinh1.jpg",
+      "img/hinh2.jpg",
+      "img/hinh3.jpg",
+      "img/hinh4.jpg",
+      "img/hinh5.jpg",
+      "img/hinh6.jpg",
+      "img/hinh7.jpg"
+    ];
+    function createFallingImage() {
+  const container = document.createElement("div");
+  const img = document.createElement("img");
+  const randomImg = imgSource[Math.floor(Math.random() * imgSource.length)];
+
+  img.src = randomImg;
+  container.classList.add("falling-photo");
+
+  // Random vị trí ngang (trái)
+  container.style.left = Math.random() * 90 + "vw";
+
+  // Random góc xoay ban đầu (dùng biến custom CSS)
+  const rotateDeg = Math.floor(Math.random() * 60 - 30); // -30 đến +30 độ
+  container.style.setProperty('--random-rotate', `${rotateDeg}deg`);
+
+  container.appendChild(img);
+  document.getElementById("falling-images-container").appendChild(container);
+
+  // Xoá sau khi rơi xong
+  setTimeout(() => container.remove(), 6000);
+}
+  </script>
+
+  <body>
+    <div class="row">
+      <div class="col-md-6">
+        <form
+          id="loveForm"
+          action="https://formspree.io/f/mrblbodp"
+          method="POST"
+        >
+          <table class="table table-bordered table-striped my-3">
+            <tr>
+              <td style="background-color: #eff0fb">
+                <input
+                  type="checkbox"
+                  name="option"
+                  id="namtay"
+                  value="Nắm Tay"
+                />
+                <label for="namtay">Nắm tay Bấy Bì</label>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #ebf5fd">
+                <input type="checkbox" name="option" id="hun" value="Hun" />
+                <label for="hun">Thơmmmmmm môiiiiii</label>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #ffecee">
+                <input
+                  type="checkbox"
+                  name="option"
+                  id="thomma"
+                  value="Thơm Má"
+                />
+                <label for="thomma">Thơmmmmmm máaaaaaaaa</label>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #fef9eb">
+                <input
+                  type="checkbox"
+                  name="option"
+                  id="om"
+                  value="Ômmmmmmmmmm"
+                />
+                <label for="om">Ômmmmmmmmmm Cục Dàng</label>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #edfdef">
+                <input type="checkbox" name="option" id="liem" value="Liếm" />
+                <label for="liem">Liếm Thanh Hà</label>
+              </td>
+            </tr>
+            <tr>
+              <td style="background-color: #ebfdfe">
+                <input
+                  type="checkbox"
+                  name="option"
+                  id="quanh"
+                  value="Quánh Đít"
+                />
+                <label for="quanh">Quánh Đít Em</label>
+              </td>
+            </tr>
+          </table>
+          <button
+            style="
+              border: none;
+              color: white;
+              width: 200px;
+              height: 50px;
+              border-radius: 50px;
+              background-color: #bb5266;
+            "
+            type="submit"
+            class="mx-auto d-block mt-3"
+          >
+            Gửi cho Bấy Bì
+          </button>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <img class="img-fluid" src="img/1751356988421_100.JPG" alt="" />
+      </div>
+    </div>
+    <div class="right"></div>
+
+    <div id="falling-images-container"></div>
+  </body>
+</html>
